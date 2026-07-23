@@ -140,14 +140,16 @@ section {
   align-items: center;
   justify-content: center;
   animation: fadeIn 0.25s ease;
+  overflow-y: auto; /* Permite el scroll vertical si el contenido es muy alto */
+  padding: 40px 0; /* Añade espacio vertical para que el modal no se pegue a los bordes */
 }
 
 .modal-box {
   background: var(--accesus-bg-secondary);
   border: 1px solid var(--accesus-border);
   border-radius: 28px;
-  padding: 56px 48px;
-  max-width: 560px;
+  padding: 48px;
+  max-width: 800px;
   width: 92%;
   position: relative;
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(164, 120, 250, 0.15);
@@ -166,7 +168,41 @@ section {
   color: var(--accesus-text-body);
   font-size: 1.05rem;
   line-height: 1.8;
-  margin-bottom: 36px;
+  margin-bottom: 20px;
+}
+
+.modal-resource {
+  display: grid;
+  gap: 18px;
+}
+
+.modal-resource ul {
+  display: grid;
+  gap: 10px;
+  padding-left: 22px;
+  color: var(--accesus-text-body);
+}
+
+.modal-links {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.modal-links a {
+  color: var(--accesus-cyan);
+  border: 1px solid rgba(49, 213, 247, 0.24);
+  background: rgba(49, 213, 247, 0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.modal-links a:hover {
+  border-color: var(--accesus-cyan);
+  background: rgba(49, 213, 247, 0.14);
 }
 
 .modal-close-btn {
@@ -192,6 +228,77 @@ section {
   color: white;
   background: var(--accesus-magenta);
   border-color: transparent;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.modal-form {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.modal-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.modal-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--accesus-text-muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal-form input[type="number"] {
+  background: var(--accesus-bg-tertiary);
+  border: 1px solid var(--accesus-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--accesus-text-primary);
+  font: inherit;
+}
+
+.modal-check {
+  display: flex !important;
+  grid-template-columns: none !important;
+  align-items: center;
+  gap: 10px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+.modal-check input {
+  width: 18px;
+  height: 18px;
+}
+
+.risk-result {
+  display: grid;
+  gap: 6px;
+  background: rgba(49, 213, 247, 0.08);
+  border: 1px solid rgba(49, 213, 247, 0.24);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.risk-result strong {
+  color: var(--accesus-text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+}
+
+.risk-result span {
+  color: var(--accesus-text-muted);
 }
 
 /* ============================================================
@@ -223,6 +330,13 @@ section {
 .btn-primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 40px rgba(164, 120, 250, 0.4);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Secondary — cyan border */
@@ -925,6 +1039,226 @@ section {
   }
 }
 
+/* ============================================================
+   ABOUT (Misión / Visión)
+   ============================================================ */
+.about {
+  background: var(--accesus-bg-secondary);
+}
+
+.about__grid {
+  display: grid;
+  gap: 32px;
+}
+
+.about-card {
+  background: var(--accesus-bg-tertiary);
+  border: 1px solid var(--accesus-border);
+  border-radius: 28px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que las tarjetas tengan la misma altura en grid */
+  transition: transform 0.3s, border-color 0.3s;
+}
+
+.about-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accesus-violet);
+}
+
+.about-card__title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accesus-text-primary);
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+/* Línea decorativa bajo el título */
+.about-card__title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: var(--accesus-gradient-soft);
+  border-radius: 3px;
+}
+
+.about-card__text {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--accesus-text-muted);
+}
+
+/* --- Responsive Grid para About --- */
+/* Tablet y Desktop */
+@media (min-width: 768px) {
+  .about__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .about-card {
+    padding: 48px;
+  }
+}
+
+/* ============================================================
+   CONTACT / REGISTER
+   ============================================================ */
+.contact {
+  background: var(--accesus-bg-primary);
+}
+
+.contact__layout {
+  display: flex;
+  justify-content: center;
+}
+
+.contact__form-wrap {
+  width: 100%;
+  max-width: 640px;
+  background: var(--accesus-bg-secondary);
+  border: 1px solid var(--accesus-border);
+  border-radius: 28px;
+  padding: 48px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accesus-text-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--accesus-bg-tertiary);
+  border: 1px solid var(--accesus-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1rem;
+  color: var(--accesus-text-primary);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #6b6b8a;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accesus-violet);
+  box-shadow: 0 0 0 3px rgba(164, 120, 250, 0.2);
+}
+
+.form-group select {
+  /* Appearance for custom dropdown arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+}
+
+.form-group select:invalid {
+  color: #6b6b8a;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+  padding: 18px 32px;
+  font-size: 1rem;
+  margin-top: 16px;
+}
+
+/* --- Responsive Contact --- */
+@media (max-width: 768px) {
+  .contact__form-wrap {
+    padding: 32px 24px;
+  }
+
+  .btn-full {
+    padding: 16px 24px;
+  }
+}
+
+.contact__doctor-preview {
+  background: rgba(49, 213, 247, 0.08);
+  border: 1px solid rgba(49, 213, 247, 0.24);
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: grid;
+  gap: 4px;
+}
+
+.contact__doctor-preview span,
+.contact__doctor-preview small {
+  color: var(--accesus-text-muted);
+  font-size: 0.82rem;
+}
+
+.contact__doctor-preview strong {
+  color: var(--accesus-text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+}
+
+.contact__success {
+  text-align: center;
+  padding: 28px 24px;
+  background: rgba(49, 213, 247, 0.08);
+  border: 1px solid rgba(49, 213, 247, 0.24);
+  border-radius: 18px;
+}
+
+.contact__success h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accesus-text-primary);
+  margin-bottom: 10px;
+}
+
+.contact__success p {
+  color: var(--accesus-text-muted);
+  margin-bottom: 18px;
+}
+
+.contact__error {
+  color: var(--accesus-magenta);
+  text-align: center;
+  margin-top: 4px;
+}
 @keyframes slideUp {
   from {
     transform: translateY(40px);
@@ -988,5 +1322,16 @@ section {
 
   .hero__title {
     font-size: 2.6rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .modal-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+    justify-content: center;
   }
 }
