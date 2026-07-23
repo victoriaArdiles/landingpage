@@ -535,21 +535,24 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  border: 1px solid var(--accesus-border);
-  background: var(--accesus-glass);
+  border: 1.5px solid rgba(164, 120, 250, 0.42);
+  background: linear-gradient(135deg, rgba(164, 120, 250, 0.18), rgba(49, 213, 247, 0.1));
+  color: var(--accesus-yellow);
   cursor: pointer;
   font-size: 1.25rem;
-  transition: background 0.25s, border-color 0.25s, transform 0.3s;
+  box-shadow: 0 0 0 4px rgba(164, 120, 250, 0.08), 0 10px 24px rgba(0, 0, 0, 0.28);
+  transition: background 0.25s, border-color 0.25s, transform 0.3s, box-shadow 0.25s;
   flex-shrink: 0;
 }
 
 .theme-toggle:hover {
-  background: var(--accesus-bg-tertiary);
-  border-color: var(--accesus-violet);
-  transform: rotate(20deg);
+  background: linear-gradient(135deg, rgba(164, 120, 250, 0.28), rgba(49, 213, 247, 0.18));
+  border-color: var(--accesus-cyan);
+  box-shadow: 0 0 0 5px rgba(49, 213, 247, 0.12), 0 14px 32px rgba(49, 213, 247, 0.18);
+  transform: rotate(20deg) scale(1.06);
 }
 
 /* ============================================================

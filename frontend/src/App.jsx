@@ -118,24 +118,24 @@ const TESTIMONIALS = [
   { name: 'Ricardo Vargas', tag: 'SALUD DIGITAL', image: slide2, quote: 'Nunca fue tan fácil recibir mis medicamentos. El sistema de Access Bolivia es verdaderamente revolucionario.', sub: 'Tecnología al servicio de Chuquisaca.' },
 ];
 
-const REGIONAL_DOCTORS = {
+const FALLBACK_REGIONAL_DOCTORS = {
   'La Paz': {
-    name: 'Equipo medico regional La Paz',
-    phone: '+591 70000001',
-    whatsapp: '59170000001',
-    specialty: 'Cardiologia y medicina interna',
+    name: 'Equipo regional La Paz',
+    phone: '',
+    whatsapp: '',
+    specialty: 'Contacto medico pendiente de asignacion',
   },
   Tarija: {
-    name: 'Equipo medico regional Tarija',
-    phone: '+591 70000002',
-    whatsapp: '59170000002',
-    specialty: 'Cardiologia y seguimiento clinico',
+    name: 'Equipo regional Tarija',
+    phone: '',
+    whatsapp: '',
+    specialty: 'Contacto medico pendiente de asignacion',
   },
   Chuquisaca: {
-    name: 'Equipo medico regional Chuquisaca',
-    phone: '+591 70000003',
-    whatsapp: '59170000003',
-    specialty: 'Medicina familiar y enfermedades cronicas',
+    name: 'Equipo regional Chuquisaca',
+    phone: '',
+    whatsapp: '',
+    specialty: 'Contacto medico pendiente de asignacion',
   },
 };
 
@@ -155,6 +155,31 @@ export default function App() {
   const [submitMessage, setSubmitMessage] = useState('');
   const [riskForm, setRiskForm] = useState({ age: '', pressure: '', diabetes: false, smoker: false });
   const [riskResult, setRiskResult] = useState(null);
+  const [regionalDoctors, setRegionalDoctors] = useState(FALLBACK_REGIONAL_DOCTORS);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    supabase
+      .from('doctores_regionales')
+      .select('departamento,nombre,telefono,whatsapp,especialidad,activo')
+      .eq('activo', true)
+      .then(({ data, error }) => {
+        if (error || !data?.length) return;
+
+        const doctorsByRegion = data.reduce((acc, doctor) => {
+          acc[doctor.departamento] = {
+            name: doctor.nombre,
+            phone: doctor.telefono || '',
+            whatsapp: doctor.whatsapp || '',
+            specialty: doctor.especialidad || 'Contacto medico regional',
+          };
+          return acc;
+        }, { ...FALLBACK_REGIONAL_DOCTORS });
+
+        setRegionalDoctors(doctorsByRegion);
+      });
+  }, []);
 
   // ── Fetch real stats from Django API ──
   useEffect(() => {
@@ -209,7 +234,7 @@ export default function App() {
     setAssignedDoctor(null);
 
     const cleanedPhone = formState.phone.replace(/\D/g, '');
-    const doctor = REGIONAL_DOCTORS[formState.city];
+    const doctor = regionalDoctors[formState.city];
 
     if (!formState.name.trim() || cleanedPhone.length < 7 || !doctor) {
       setSubmitStatus('error');
@@ -231,7 +256,7 @@ export default function App() {
         telefono: cleanedPhone,
         email: formState.email.trim() || null,
         departamento: formState.city,
-        mensaje: formState.message.trim() || `Solicitud web asignada a ${doctor.name} (${doctor.phone})`,
+        mensaje: formState.message.trim() || `Solicitud web para ${doctor.name}. Contacto medico: ${doctor.phone || 'pendiente de asignacion'}`,
         estado_contacto: 'nuevo',
         fecha_registro: new Date().toISOString(),
       },
@@ -572,7 +597,7 @@ export default function App() {
                   <label htmlFor="city">Ciudad de Residencia</label>
                   <select id="city" value={formState.city} onChange={handleFormChange} required>
                     <option value="" disabled>Selecciona tu ciudad</option>
-                    {Object.keys(REGIONAL_DOCTORS).map((city) => (
+                    {Object.keys(regionalDoctors).map((city) => (
                       <option key={city} value={city}>{city}</option>
                     ))}
                   </select>
@@ -584,8 +609,8 @@ export default function App() {
                 {formState.city && (
                   <div className="contact__doctor-preview">
                     <span>Especialista asignado</span>
-                    <strong>{REGIONAL_DOCTORS[formState.city].name}</strong>
-                    <small>{REGIONAL_DOCTORS[formState.city].specialty}</small>
+                    <strong>{regionalDoctors[formState.city].name}</strong>
+                    <small>{regionalDoctors[formState.city].specialty}</small>
                   </div>
                 )}
                 <button type="submit" className="btn btn-primary btn-full" disabled={isSubmitting}>
@@ -594,10 +619,15 @@ export default function App() {
                 {submitStatus === 'success' && assignedDoctor && (
                   <div className="contact__success" role="status">
                     <h3>Solicitud registrada correctamente</h3>
-                    <p>Te derivamos con {assignedDoctor.name}. Puedes escribir por WhatsApp o esperar el contacto del equipo.</p>
-                    <a className="btn btn-secondary btn-full" href={`https://wa.me/${assignedDoctor.whatsapp}`} target="_blank" rel="noreferrer">
-                      Contactar por WhatsApp <ArrowRight size={16} />
-                    </a>
+                    <p>
+                      Te derivamos con {assignedDoctor.name}.
+                      {assignedDoctor.phone ? ' Puedes escribir por WhatsApp o esperar el contacto del equipo.' : ' El contacto medico quedara pendiente hasta que el equipo cargue los datos del especialista.'}
+                    </p>
+                    {assignedDoctor.whatsapp && (
+                      <a className="btn btn-secondary btn-full" href={`https://wa.me/${assignedDoctor.whatsapp}`} target="_blank" rel="noreferrer">
+                        Contactar por WhatsApp <ArrowRight size={16} />
+                      </a>
+                    )}
                   </div>
                 )}
                 {submitStatus === 'error' && (
